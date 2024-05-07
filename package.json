@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "preact": "^10.19.6"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.8.2",
+    "@vanilla-extract/vite-plugin": "^4.0.9",
     "prettier": "3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"

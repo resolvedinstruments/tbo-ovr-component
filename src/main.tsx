@@ -1,5 +1,4 @@
-import { render } from 'preact'
-import { App } from './app.tsx'
-import './index.css'
+import { render } from "preact"
+import { OutsideComponent } from "./OutsideComponent.tsx"
 
-render(<App />, document.getElementById('app')!)
+render(<OutsideComponent />, document.getElementById("app")!)
