@@ -18,8 +18,12 @@ export const activeImage = style({
   zIndex: 10,
 })
 
-export const hiddenImage = style({
+export const stagingImage = style({
   zIndex: 1,
+})
+
+export const hiddenImage = style({
+  display: "none",
 })
 
 export const spinHandler = style({
@@ -31,10 +35,16 @@ export const spinHandler = style({
 })
 
 export const loadTxt = style({
-  padding: "1rem",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   position: "absolute",
   top: 0,
   left: 0,
-  color: "#ffffff",
+  right: 0,
+  bottom: 0,
+  backgroundColor: "#a0a0a0",
+  color: "#101010",
+  fontSize: "1.5rem",
   zIndex: 20,
 })
