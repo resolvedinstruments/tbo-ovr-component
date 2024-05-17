@@ -43,7 +43,7 @@ export const loadTxt = style({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "#a0a0a0",
+  backgroundColor: "#d0d0d0",
   color: "#101010",
   fontSize: "1.5rem",
   zIndex: 20,

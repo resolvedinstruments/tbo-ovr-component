@@ -3,6 +3,7 @@ import * as styles from "./styles.css.ts"
 import clsx from "clsx"
 import { JSX } from "preact"
 
+
 const FEAT_LOADFIRST = true
 
 const formatIndex = (index: number) => {
@@ -21,7 +22,6 @@ const Image = ({ index, active = false, className, ...props }: ImageProps) => {
       {...props}
       className={clsx(
         styles.image,
-        // active ? styles.activeImage : styles.hiddenImage,
         className
       )}
       onDragStart={(e) => e.preventDefault()}
@@ -29,24 +29,22 @@ const Image = ({ index, active = false, className, ...props }: ImageProps) => {
   )
 }
 
-const setActiveIndex = (a: number) => {}
-
 type MouseSpinHandlerProps = {
   spin: (delta: number) => void
 }
 
-type MouseSpinHandlerStuff = {
+type MouseSpinHandlerState = {
   isDragging: boolean
   lastX: number
   lastTime: number
   spinPolarity: number
 }
 
-const InitialMouseSpinHandlerStuff: MouseSpinHandlerStuff = {
+const InitialMouseSpinHandlerStuff: MouseSpinHandlerState = {
   isDragging: false,
   lastX: 0,
   lastTime: 0,
-  spinPolarity: 1,
+  spinPolarity: -1,
 }
 
 const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
@@ -58,13 +56,6 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     s.isDragging = true
     s.lastX = event.layerX
     s.lastTime = Number(new Date())
-
-    if (containerRef.current) {
-      const h = containerRef.current.clientHeight
-      const y = event.layerY
-
-      s.spinPolarity = y < h / 4 ? 1 : -1
-    }
   }
 
   const handleMouseMove = (event: any) => {
@@ -72,9 +63,8 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     if (!s.isDragging || !containerRef.current) return
 
     // scale speed of rotation to size of element
-    const xscale = containerRef.current.clientWidth / 72
+    const xscale = containerRef.current.clientWidth / 72 / 0.85
 
-    // console.log("x, last", event.layerX, s.lastX)
     let dx = Math.round((event.layerX - s.lastX) / xscale)
     const time = Number(new Date())
 
@@ -95,7 +85,7 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     }
   }
 
-  const handleMouseUp = (event: MouseEvent) => {
+  const handleMouseUp = (_event: MouseEvent) => {
     const s = stateRef.current
     s.isDragging = false
   }
@@ -132,7 +122,7 @@ export function OutsideComponent() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState(0)
 
-  const handleLoad = (index: number) => {
+  const handleLoad = (_index: number) => {
     setImagesLoaded((loaded) => loaded + 1)
   }
 
