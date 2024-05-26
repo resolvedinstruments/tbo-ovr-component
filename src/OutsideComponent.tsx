@@ -3,7 +3,6 @@ import * as styles from "./styles.css.ts"
 import clsx from "clsx"
 import { JSX } from "preact"
 
-
 const FEAT_LOADFIRST = true
 
 const formatIndex = (index: number) => {
@@ -13,17 +12,24 @@ const formatIndex = (index: number) => {
 type ImageProps = Omit<JSX.HTMLAttributes<HTMLImageElement>, "src"> & {
   index: number
   active?: boolean
+  snapPath: string
 }
 
-const Image = ({ index, active = false, className, ...props }: ImageProps) => {
+const Image = ({
+  index,
+  active = false,
+  className,
+  snapPath,
+  ...props
+}: ImageProps) => {
+  const formattedSnapPath = snapPath.endsWith("/")
+    ? snapPath.slice(0, -1)
+    : snapPath
   return (
     <img
-      src={`0001/0001_ovr/0001_screenshots_ovr_3840x2160/snap_${formatIndex(index + 1)}.png`}
+      src={`${formattedSnapPath}/snap_${formatIndex(index + 1)}.png`}
       {...props}
-      className={clsx(
-        styles.image,
-        className
-      )}
+      className={clsx(styles.image, className)}
       onDragStart={(e) => e.preventDefault()}
     />
   )
@@ -118,7 +124,7 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
   )
 }
 
-export function OutsideComponent() {
+export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState(0)
 
@@ -149,6 +155,7 @@ export function OutsideComponent() {
             index={i}
             // active={activeIndex === i}
             onLoad={() => handleLoad(i)}
+            snapPath={snapPath}
             className={imageClass(activeIndex, i)}
           />
         ))}
@@ -163,6 +170,7 @@ export function OutsideComponent() {
                 index={i}
                 // active={activeIndex === i}
                 onLoad={() => handleLoad(i)}
+                snapPath={snapPath}
                 className={imageClass(activeIndex, i)}
               />
             )
@@ -182,3 +190,5 @@ const imageClass = (activeIndex: number, imageIndex: number) => {
     return styles.hiddenImage
   }
 }
+
+export default OutsideComponent
