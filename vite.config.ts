@@ -14,4 +14,7 @@ export default defineConfig({
       fileName: (format) => `tbo-ovr-component.${format}.js`,
     },
   },
+  server: {
+    host: true,
+  },
 })

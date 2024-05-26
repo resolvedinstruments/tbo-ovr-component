@@ -57,21 +57,21 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
   const stateRef = useRef(InitialMouseSpinHandlerStuff)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const handleMouseDown = (event: any) => {
+  const handleStart = (x: number) => {
     const s = stateRef.current
     s.isDragging = true
-    s.lastX = event.layerX
+    s.lastX = x
     s.lastTime = Number(new Date())
   }
 
-  const handleMouseMove = (event: any) => {
+  const handleMove = (x: number) => {
     const s = stateRef.current
     if (!s.isDragging || !containerRef.current) return
 
     // scale speed of rotation to size of element
     const xscale = containerRef.current.clientWidth / 72 / 0.85
 
-    let dx = Math.round((event.layerX - s.lastX) / xscale)
+    let dx = Math.round((x - s.lastX) / xscale)
     const time = Number(new Date())
 
     let minTime = 0
@@ -81,7 +81,7 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     }
 
     if (Math.abs(dx) > 0 && time - s.lastTime >= minTime) {
-      s.lastX = event.layerX
+      s.lastX = x
       s.lastTime = time
 
       if (!FEAT_LOADFIRST && Math.abs(dx) > 2) {
@@ -91,10 +91,20 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     }
   }
 
-  const handleMouseUp = (_event: MouseEvent) => {
+  const handleEnd = () => {
     const s = stateRef.current
     s.isDragging = false
   }
+
+  const handleMouseDown = (event: MouseEvent) => handleStart(event.clientX)
+  const handleMouseMove = (event: MouseEvent) => handleMove(event.clientX)
+  const handleMouseUp = (_event: MouseEvent) => handleEnd()
+
+  const handleTouchStart = (event: TouchEvent) =>
+    handleStart(event.touches[0].clientX)
+  const handleTouchMove = (event: TouchEvent) =>
+    handleMove(event.touches[0].clientX)
+  const handleTouchEnd = (_event: TouchEvent) => handleEnd()
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown)
@@ -117,13 +127,15 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseUp}
       onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
       ref={containerRef}
       className={styles.spinHandler}
     ></div>
   )
 }
-
 export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState(0)
