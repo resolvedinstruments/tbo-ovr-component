@@ -55,12 +55,12 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     s.lastTime = Number(new Date())
   }
 
-  const handleMove = (x: number) => {
+  const handleMove = (x: number, speed: number = 1.0) => {
     const s = stateRef.current
     if (!s.isDragging || !containerRef.current) return
 
     // scale speed of rotation to size of element
-    const xscale = containerRef.current.clientWidth / 72 / 0.85
+    const xscale = containerRef.current.clientWidth / 72 / 0.85 / speed
 
     let dx = Math.round((x - s.lastX) / xscale)
     const time = Number(new Date())
@@ -89,10 +89,14 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
 
   const handleTouchStart = (event: TouchEvent) =>
     handleStart(event.touches[0].clientX)
-  const handleTouchMove = (event: TouchEvent) =>
-    handleMove(event.touches[0].clientX)
+  const handleTouchMove = (event: TouchEvent) => {
+    if (event.touches.length === 1) {
+      // stop default panning effect when zoomed in on mobile -- only for single touch events
+      event.preventDefault()
+      handleMove(event.touches[0].clientX, 0.5)
+    }
+  }
   const handleTouchEnd = (_event: TouchEvent) => handleEnd()
-
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown)
     return () => {
