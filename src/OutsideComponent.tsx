@@ -142,14 +142,14 @@ export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
   }
 
   const loadingPercent = Math.round((imagesLoaded / 72) * 100)
+  console.log("loadingPercent", loadingPercent)
+  console.log("imagesLoaded", imagesLoaded)
 
   return (
     <div className={styles.container}>
       <MouseSpinHandler spin={handleSpin} />
 
-      {imagesLoaded < 72 && (
-        <div className={styles.loadTxt}>Loading: {loadingPercent} %</div>
-      )}
+      <LoadingScreen percentLoaded={loadingPercent} />
 
       {Array.from(
         { length: 72 },
@@ -164,6 +164,24 @@ export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
             />
           )
       )}
+    </div>
+  )
+}
+
+const LoadingScreen = ({ percentLoaded }: { percentLoaded: number }) => {
+  if (percentLoaded === 100) {
+    return null
+  }
+
+  return (
+    <div className={styles.loaderContainer}>
+      <div className={styles.loaderText}>Loading: {percentLoaded}%</div>
+      <div className={styles.loaderBar}>
+        <div
+          className={styles.loaderProgress}
+          style={{ width: `${percentLoaded}%` }}
+        ></div>
+      </div>
     </div>
   )
 }

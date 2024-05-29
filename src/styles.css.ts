@@ -48,3 +48,44 @@ export const loadTxt = style({
   fontSize: "1.5rem",
   zIndex: 20,
 })
+
+export const loaderContainer = style({
+  display: "flex",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100%",
+  backgroundColor: "#f0f0f0",
+  zIndex: 30,
+  gap: "1rem",
+})
+
+export const loaderText = style({
+  fontSize: "1.5rem",
+})
+
+export const loaderBar = style({
+  width: "50%",
+  height: "1rem",
+  backgroundColor: "#ddd",
+  borderRadius: "0.5rem",
+  overflow: "hidden",
+})
+
+export const loaderProgress = style({
+  height: "100%",
+  backgroundColor: "#303030",
+  transition: "width 0.3s ease",
+})
+
+export const loadingScreenStyles = {
+  loaderContainer,
+  loaderText,
+  loaderBar,
+  loaderProgress,
+}
