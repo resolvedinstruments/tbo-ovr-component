@@ -3,25 +3,16 @@ import * as styles from "./styles.css.ts"
 import clsx from "clsx"
 import { JSX } from "preact"
 
-const FEAT_LOADFIRST = true
-
 const formatIndex = (index: number) => {
   return index.toString().padStart(3, "0")
 }
 
 type ImageProps = Omit<JSX.HTMLAttributes<HTMLImageElement>, "src"> & {
   index: number
-  active?: boolean
   snapPath: string
 }
 
-const Image = ({
-  index,
-  active = false,
-  className,
-  snapPath,
-  ...props
-}: ImageProps) => {
+const Image = ({ index, className, snapPath, ...props }: ImageProps) => {
   const formattedSnapPath = snapPath.endsWith("/")
     ? snapPath.slice(0, -1)
     : snapPath
@@ -75,16 +66,12 @@ const MouseSpinHandler = ({ spin }: MouseSpinHandlerProps) => {
     const time = Number(new Date())
 
     let minTime = 0
-    if (!FEAT_LOADFIRST) {
-      const maxFps = 10
-      minTime = (1 / maxFps) * 1000
-    }
 
     if (Math.abs(dx) > 0 && time - s.lastTime >= minTime) {
       s.lastX = x
       s.lastTime = time
 
-      if (!FEAT_LOADFIRST && Math.abs(dx) > 2) {
+      if (Math.abs(dx) > 2) {
         dx = (Math.abs(dx) / dx) * 2
       }
       spin(s.spinPolarity * dx)
@@ -150,55 +137,45 @@ export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
     })
   }
 
+  const loadingPercent = Math.round((imagesLoaded / 72) * 100)
+
   return (
     <div className={styles.container}>
       <MouseSpinHandler spin={handleSpin} />
 
-      {FEAT_LOADFIRST && imagesLoaded < 72 && (
-        <div className={styles.loadTxt}>
-          Loading: {Math.round((imagesLoaded / 72) * 100)} %
-        </div>
+      {imagesLoaded < 72 && (
+        <div className={styles.loadTxt}>Loading: {loadingPercent} %</div>
       )}
 
-      {FEAT_LOADFIRST ||
-        Array.from({ length: 72 }, (_, i) => (
-          <Image
-            key={i}
-            index={i}
-            // active={activeIndex === i}
-            onLoad={() => handleLoad(i)}
-            snapPath={snapPath}
-            className={imageClass(activeIndex, i)}
-          />
-        ))}
-
-      {FEAT_LOADFIRST &&
-        Array.from(
-          { length: 72 },
-          (_, i) =>
-            imagesLoaded + 12 >= Math.floor(i / 24) * 24 && (
-              <Image
-                key={i}
-                index={i}
-                // active={activeIndex === i}
-                onLoad={() => handleLoad(i)}
-                snapPath={snapPath}
-                className={imageClass(activeIndex, i)}
-              />
-            )
-        )}
+      {Array.from(
+        { length: 72 },
+        (_, i) =>
+          imagesLoaded + 12 >= Math.floor(i / 24) * 24 && (
+            <Image
+              key={i}
+              index={i}
+              onLoad={() => handleLoad(i)}
+              snapPath={snapPath}
+              className={imageClass(activeIndex, i, loadingPercent < 100)}
+            />
+          )
+      )}
     </div>
   )
 }
 
-const imageClass = (activeIndex: number, imageIndex: number) => {
+const imageClass = (
+  activeIndex: number,
+  imageIndex: number,
+  isLoading: boolean = false
+) => {
   if (activeIndex === imageIndex) {
     return styles.activeImage
-  } else if (FEAT_LOADFIRST) {
-    return styles.stagingImage
-  } else if (Math.abs(imageIndex - activeIndex) < 4) {
+  } else if (isLoading) {
+    // some browser will cause flash of white if they haven't been displayed, so display offscreen while loading
     return styles.stagingImage
   } else {
+    // hiding images while rotating improves performance
     return styles.hiddenImage
   }
 }
