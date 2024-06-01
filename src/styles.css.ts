@@ -4,6 +4,13 @@ export const container = style({
   width: "100%",
   position: "relative",
   aspectRatio: "16/9",
+  backgroundColor: "black",
+  WebkitUserSelect: "none",
+  KhtmlUserSelect: "none",
+  MozUserSelect: "none",
+  userSelect: "none",
+  outline: 0,
+  lineHeight: 1.4,
 })
 
 export const image = style({
@@ -34,58 +41,44 @@ export const spinHandler = style({
   top: 0,
 })
 
-export const loadTxt = style({
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
+export const loadFont = style({
+  fontFamily:
+    'Helvetica, "Nimbus Sans L", "Liberation Sans", Arial, sans-serif',
+})
+
+export const loadBox = style({
   position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "#d0d0d0",
-  color: "#101010",
-  fontSize: "1.5rem",
+  top: "50%",
+  left: "50%",
+  width: "12.5rem", // 200px to rem
+  height: "9.375rem", // 150px to rem
+  margin: "-4.6875rem 0 0 -6.25rem", // -75px 0 0 -100px to rem
+  backgroundColor: "rgba(0,0,0,0.7)",
+  borderRadius: "3px", // 3px to rem
+  textAlign: "center",
+  fontSize: "1.25rem", // 20px to rem
+  color: "#fff",
   zIndex: 20,
 })
 
-export const loaderContainer = style({
-  display: "flex",
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
+export const loadBoxText = style({
+  margin: "1.25rem 0",
+})
+
+export const loadBar = style({
+  width: "9.375rem", // 150px to rem
+  margin: "0 auto",
+  border: "1px solid #fff",
+  height: "0.375rem", // 6px to rem
+})
+
+export const loadBarFill = style({
+  background: "#fff",
   height: "100%",
-  backgroundColor: "#f0f0f0",
-  zIndex: 30,
-  gap: "1rem",
-})
-
-export const loaderText = style({
-  fontSize: "1.5rem",
-})
-
-export const loaderBar = style({
-  width: "50%",
-  height: "1rem",
-  backgroundColor: "#ddd",
-  borderRadius: "0.5rem",
-  overflow: "hidden",
-})
-
-export const loaderProgress = style({
-  height: "100%",
-  backgroundColor: "#303030",
+  width: "0",
   transition: "width 0.3s ease",
 })
 
-export const loadingScreenStyles = {
-  loaderContainer,
-  loaderText,
-  loaderBar,
-  loaderProgress,
-}
+export const loadMessage = style({
+  fontSize: "0.75rem", // 12px to rem
+})

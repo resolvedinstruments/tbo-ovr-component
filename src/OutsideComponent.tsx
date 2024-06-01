@@ -142,8 +142,6 @@ export function OutsideComponent({ snapPath = "" }: { snapPath?: string }) {
   }
 
   const loadingPercent = Math.round((imagesLoaded / 72) * 100)
-  console.log("loadingPercent", loadingPercent)
-  console.log("imagesLoaded", imagesLoaded)
 
   return (
     <div className={styles.container}>
@@ -174,14 +172,15 @@ const LoadingScreen = ({ percentLoaded }: { percentLoaded: number }) => {
   }
 
   return (
-    <div className={styles.loaderContainer}>
-      <div className={styles.loaderText}>Loading: {percentLoaded}%</div>
-      <div className={styles.loaderBar}>
+    <div className={clsx(styles.loadBox, styles.loadFont)}>
+      <p className={styles.loadBoxText}>Loading...</p>
+      <div className={styles.loadBar}>
         <div
-          className={styles.loaderProgress}
+          className={styles.loadBarFill}
           style={{ width: `${percentLoaded}%` }}
         ></div>
       </div>
+      <p className={styles.loadMessage}>{percentLoaded} %</p>
     </div>
   )
 }
